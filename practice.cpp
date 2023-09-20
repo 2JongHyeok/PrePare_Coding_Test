@@ -1,24 +1,49 @@
 #include <string>
-#include <vector>
 
 using namespace std;
 
-int solution(vector<string> babbling) {
+int solution(string dartResult) {
     int answer = 0;
-    int again;
-    for (string val : babbling) {
-        again = -1;
-        for (int i = 0; i < val.size();) {
-            if (val.compare(i, 3, "aya") == 0 && again != 1) { i += 3, again = 1; }
-            else if (val.compare(i, 2, "ye") == 0 && again != 2) { i += 2, again = 2; }
-            else if (val.compare(i, 3, "woo") == 0 && again != 3) { i += 3, again = 3; }
-            else if (val.compare(i, 2, "ma") == 0 && again != 4) { i += 2, again = 4; }
-            else { again = 0; break; }
+    int score = 0;
+    int prescore = 0;
+    for (int i = 0; i < dartResult.length(); ++i) {
+        if ('0' <= dartResult[i] && dartResult[i] <= '9') {
+            answer += prescore;
+            prescore = score;
+            if (dartResult[i] == '1') {
+                if (dartResult[i + 1] == '0') {
+                    score = 10;
+                    ++i;
+
+                }
+                else {
+                    score = 1;
+                }
+                continue;
+            }
+            score = (dartResult[i] - '0');
+            continue;
         }
-        if (again != 0)
-            ++answer;
+        else if (dartResult[i] == 'S') {
+            continue;
+        }
+        else if (dartResult[i] == 'D') {
+            score = score * score;
+            continue;
+        }
+        else if (dartResult[i] == 'T') {
+            score = score * score * score;
+            continue;
+        }
+        else if (dartResult[i] == '*') {
+            prescore = prescore * 2;
+            score = score * 2;
+        }
+        else if (dartResult[i] == '#') {
+            score = -score;
+        }
     }
-
-
+    answer += prescore;
+    answer += score;
     return answer;
 }
